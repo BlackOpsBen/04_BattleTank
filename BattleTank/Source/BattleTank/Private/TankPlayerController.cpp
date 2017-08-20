@@ -53,6 +53,14 @@ void ATankPlayerController::AimTowardsCrosshair()
 //Get world location of linetrace through crosshair, true if hits landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
-	HitLocation = FVector(1.0f);
+	// Find the crosshair position
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	auto ScreenLocation = FVector2D(ViewportSizeX*CrosshairXLocation, ViewportSizeY*CrosshairYLocation);
+	HitLocation.X = ScreenLocation.X;
+	HitLocation.Y = ScreenLocation.Y;
+
+	// De-project the screen position of the crosshair to a world direction
+	// Line-trace along that look direction and see what we hit (up to max range)
 	return true;
 }
