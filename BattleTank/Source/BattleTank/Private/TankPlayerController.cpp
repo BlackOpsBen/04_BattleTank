@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
+#include "Engine/World.h"
 
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -62,10 +63,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Look direction: %s"), *LookDirection.ToString());
+		// Line-trace along that look direction and see what we hit (up to max range)
+		GetLookVectorHitLocation(LookDirection, HitLocation);
 	}
 
-	// Line-trace along that look direction and see what we hit (up to max range)
 	return true;
 }
 
@@ -75,4 +76,21 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 	FVector CameraWorldLocation; // Out Parameter - to be discarded but must be passed in.
 
 	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraWorldLocation, LookDirection);
+}
+
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+	//FHitResult HitResult;
+	//auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	//auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+
+	//if(GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+	//{
+	//	//Set hit location
+	//	HitLocation = HitResult.Location;
+	//	UE_LOG(LogTemp, Warning, TEXT("Line trace hit result location: %s"), *HitLocation.ToString());
+	//	return true;
+	//}
+	return false; // Line trace didn't succeed.
 }
