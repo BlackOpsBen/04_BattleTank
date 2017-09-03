@@ -14,9 +14,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(LogTemp, Warning, TEXT("PlayerController Begin Play"))
-
-		auto ControlledTank = GetControlledTank();
+	auto ControlledTank = GetControlledTank();
 	if (!ControlledTank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController not possessing a tank!"))
@@ -45,8 +43,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("Hitlocation: %s"), *HitLocation.ToString());
-		// TODO Tell controlled tank to aim at this point
+		GetControlledTank()->AimAt(HitLocation);
 	}
 
 }
@@ -81,16 +78,17 @@ bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& 
 
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
 {
-	//FHitResult HitResult;
-	//auto StartLocation = PlayerCameraManager->GetCameraLocation();
-	//auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	FHitResult HitResult;
+	auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
 
-	//if(GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-	//{
-	//	//Set hit location
-	//	HitLocation = HitResult.Location;
-	//	UE_LOG(LogTemp, Warning, TEXT("Line trace hit result location: %s"), *HitLocation.ToString());
-	//	return true;
-	//}
+	if(GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+	{
+		//Set hit location
+		HitLocation = HitResult.Location;
+		//UE_LOG(LogTemp, Warning, TEXT("Line trace hit result location: %s"), *HitLocation.ToString());
+		return true;
+	}
+	HitLocation = FVector(0);
 	return false; // Line trace didn't succeed.
 }

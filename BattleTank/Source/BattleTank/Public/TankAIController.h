@@ -20,5 +20,9 @@ public:
 
 	ATank* GetControlledTank() const;
 
-	ATank* GetPlayerTank() const;	
+	ATank* GetPlayerTank() const;
+
+protected:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };
